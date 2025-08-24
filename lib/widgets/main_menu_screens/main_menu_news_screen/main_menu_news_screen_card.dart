@@ -39,16 +39,19 @@ class _MainMenuNewsScreenCardWidgetState
   @override
   void initState() {
     if (widget.news.videoUrl != null) {
-      _youtubePlayerController = YoutubePlayerController.fromVideoId(
-        params: const YoutubePlayerParams(
-          showControls: true,
-          mute: false,
-          showFullscreenButton: true,
-          loop: false,
-        ),
-        videoId: YoutubePlayerController.convertUrlToId(widget.news.videoUrl!)!,
-        autoPlay: false,
-      );
+      final videoId = YoutubePlayerController.convertUrlToId(widget.news.videoUrl!);
+      if (videoId != null) {
+        _youtubePlayerController = YoutubePlayerController.fromVideoId(
+          params: const YoutubePlayerParams(
+            showControls: true,
+            mute: false,
+            showFullscreenButton: true,
+            loop: false,
+          ),
+          videoId: videoId,
+          autoPlay: false,
+        );
+      }
     }
     super.initState();
   }
@@ -66,7 +69,7 @@ class _MainMenuNewsScreenCardWidgetState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (widget.news.videoUrl != null)
+          if (widget.news.videoUrl != null && _youtubePlayerController != null)
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: YoutubePlayer(controller: _youtubePlayerController!),
